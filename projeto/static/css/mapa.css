@@ -1,0 +1,185 @@
+/* ============================================
+   MAPA DE VAGAS
+   ============================================ */
+.mapa-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.mapa-header h2 {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.mapa-header h2 i {
+    color: var(--accent-blue);
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+/* Legenda */
+.legenda {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.legenda-cor {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.cor-livre { background-color: #10b981; }
+.cor-ocupada { background-color: #ef4444; }
+.cor-reservada { background-color: #f59e0b; }
+.cor-seu-veiculo { background-color: #3b82f6; }
+
+/* Container do Mapa */
+.mapa-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+}
+
+#garagem-svg {
+    width: 100%;
+    height: auto;
+    min-width: 700px;
+}
+
+.vaga-svg {
+    transition: fill 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    stroke: #475569;
+    stroke-width: 2;
+}
+
+.vaga-svg:hover {
+    opacity: 0.85;
+    stroke: white;
+    stroke-width: 3;
+}
+
+/* ============================================
+   CÂMERAS
+   ============================================ */
+.cameras-section {
+    margin-top: 30px;
+}
+
+.cameras-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cameras-section h2 i {
+    color: var(--accent-blue);
+}
+
+.cameras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.camera-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.camera-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.live-badge {
+    background-color: var(--accent-red);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.camera-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.camera-feed {
+    height: 180px;
+    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    gap: 12px;
+}
+
+.camera-feed i {
+    font-size: 2.5rem;
+}
+
+.camera-location {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.camera-location i {
+    color: var(--accent-red);
+}

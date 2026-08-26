@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Painel — Vaga Conectada{% endblock %}
+{% block page_title %}Painel{% endblock %}
+
+{% block content %}
+{% if stats.vagas_livres == 0 and stats.total_vagas > 0 %}
+<div class="lotado reveal">
+  <i class="fas fa-triangle-exclamation"></i>
+  <div><b>Estacionamento Lotado</b><p>Nenhuma vaga disponível no momento. Aguarde ou verifique outros estacionamentos.</p></div>
+</div>
+{% endif %}
+
+<div class="stats">
+  <div class="stat reveal"><div class="ic b"><i class="fas fa-square-parking"></i></div><div><div class="num" data-count="{{ stats.total_vagas }}">0</div><div class="lbl">Vagas Totais</div></div></div>
+  <div class="stat reveal"><div class="ic g"><i class="fas fa-circle-check"></i></div><div><div class="num" data-count="{{ stats.vagas_livres }}">0</div><div class="lbl">Disponíveis</div></div></div>
+  <div class="stat reveal"><div class="ic r"><i class="fas fa-car-side"></i></div><div><div class="num" data-count="{{ stats.vagas_ocupadas }}">0</div><div class="lbl">Ocupadas</div></div></div>
+  <div class="stat reveal"><div class="ic y"><i class="fas fa-arrow-right-to-bracket"></i></div><div><div class="num" data-count="{{ stats.entradas_hoje }}">0</div><div class="lbl">Entradas Hoje</div></div></div>
+</div>
+
+<div class="card reveal">
+  <div class="card-h"><h2><i class="fas fa-car-side"></i> Veículos no Pátio</h2>
+    <div class="right"><a class="btn btn-ghost" href="{% url 'assistente' %}"><i class="fas fa-robot"></i> Perguntar à IA</a></div></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Placa</th><th>Modelo</th><th>Cor</th><th>Entrada</th><th>Tempo</th><th>Valor</th><th>Status</th><th>Ação</th></tr></thead>
+      <tbody>
+        {% for v in patio %}
+        <tr>
+          <td><span class="placa">{{ v.placa|default:"---" }}</span></td>
+          <td>{{ v.modelo }}</td>
+          <td>{{ v.cor }}</td>
+          <td class="mono">{{ v.entrada|date:"d/m H:i" }}</td>
+          <td class="t-ativo">{{ v.tempo }}</td>
+          <td class="val">R$ {{ v.valor|floatformat:2 }}</td>
+          <td><span class="badge on">Ativo</span></td>
+          <td><a class="iconbtn" title="Ver no mapa" href="{% url 'mapa' %}"><i class="fas fa-location-arrow"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="empty"><i class="fas fa-inbox"></i>Nenhum veículo estacionado no momento.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

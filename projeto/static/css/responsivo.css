@@ -1,0 +1,53 @@
+/* ─────────────────────────────────────────────
+   RESPONSIVIDADE (Mobile & Tablet)
+   ──────────────────────────────────────────── */
+
+/* Tablets e telas médias */
+@media (max-width: 992px) {
+    #sidebar-wrapper {
+        margin-left: -250px; /* Esconde a sidebar */
+        position: fixed;
+        z-index: 1000;
+        height: 100vh;
+    }
+
+    #wrapper.active #sidebar-wrapper {
+        margin-left: 0; /* Mostra a sidebar quando ativo */
+    }
+
+    .sidebar-toggle {
+        display: block !important;
+    }
+}
+
+/* Celulares */
+@media (max-width: 768px) {
+    .display-6 {
+        font-size: 2rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Ajuste da tabela no dashboard */
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+
+    /* Mapa da garagem no mobile */
+    .map-container {
+        padding: 10px;
+    }
+    
+    #garagem-svg {
+        min-width: 600px; /* Garante que o SVG não fique esmagado */
+    }
+}
+
+/* Botão de toggle da sidebar (só aparece no mobile) */
+.sidebar-toggle {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+}

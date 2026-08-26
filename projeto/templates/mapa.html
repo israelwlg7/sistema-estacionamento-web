@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Mapa de Vagas — Vaga Conectada{% endblock %}
+{% block page_title %}Mapa de Vagas{% endblock %}
+
+{% block content %}
+<div class="mapa-top reveal">
+  <h2><i class="fas fa-map-location-dot"></i> Mapa Detalhado de Vagas</h2>
+  <a class="btn btn-primary" href="{% url 'assistente' %}"><i class="fas fa-robot"></i> Onde tem vaga livre?</a>
+</div>
+
+<div class="legenda reveal">
+  <span><i class="sw l"></i> Disponível</span>
+  <span><i class="sw o"></i> Ocupada</span>
+  <span><i class="sw" style="background:var(--slot-empty)"></i> Não cadastrada</span>
+  <span><i class="sw" style="background:transparent;border:2px dashed var(--cyan)"></i> Aviso da comunidade</span>
+</div>
+
+<div class="mapa-box reveal">
+  <svg id="garagem-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Planta do estacionamento">
+    <rect class="deco" x="30" y="44" width="44" height="150" rx="6"/>
+    <path class="deco-line" d="M52 150 L52 70 M52 70 L44 82 M52 70 L60 82" fill="none" stroke-width="2"/>
+    <rect class="deco" x="30" y="350" width="92" height="150" rx="6"/>
+    <line class="deco-line" x1="38" y1="372" x2="114" y2="372"/>
+    <line class="deco-line" x1="38" y1="394" x2="114" y2="394"/>
+    <line class="deco-line" x1="38" y1="416" x2="114" y2="416"/>
+    <line class="deco-line" x1="38" y1="438" x2="114" y2="438"/>
+    <line class="deco-line" x1="38" y1="460" x2="114" y2="460"/>
+
+    <text class="setor-lbl" x="84" y="34">SETOR A</text>
+    {% for s in slots_a %}
+      <rect class="vaga-svg" data-numero="{{ s.n }}" x="{{ s.x }}" y="44" width="{{ s.w }}" height="150" rx="6"/>
+      <text class="vn" x="{{ s.cx }}" y="126">{{ s.n }}</text>
+      <line class="cota-tk" x1="{{ s.cx }}" y1="198" x2="{{ s.cx }}" y2="205"/>
+      <text class="cota-tx" x="{{ s.cx }}" y="215">3.00</text>
+    {% endfor %}
+    <line class="cota-line" x1="84" y1="201" x2="965" y2="201"/>
+    <line class="cota-v" x1="80" y1="44" x2="80" y2="194"/>
+    <text class="cota-vt" x="80" y="119" transform="rotate(-90 80 119)">6.00</text>
+
+    <rect class="corredor" x="20" y="222" width="960" height="104"/>
+    <text class="corredor-txt" x="470" y="279">CORREDOR DE CIRCULAÇÃO</text>
+    <line class="cota-v" x1="50" y1="222" x2="50" y2="326"/>
+    <text class="cota-vt" x="50" y="274" transform="rotate(-90 50 274)">6.00</text>
+    <rect class="entrada-box" x="905" y="244" width="66" height="60" rx="8"/>
+    <text class="entrada-txt" x="938" y="278">ENTRADA</text>
+
+    <line class="cota-line" x1="150" y1="345" x2="970" y2="345"/>
+    {% for s in slots_b %}
+      <line class="cota-tk" x1="{{ s.cx }}" y1="341" x2="{{ s.cx }}" y2="348"/>
+      <text class="cota-tx" x="{{ s.cx }}" y="338">3.00</text>
+      <rect class="vaga-svg" data-numero="{{ s.n }}" x="{{ s.x }}" y="350" width="{{ s.w }}" height="150" rx="6"/>
+      <text class="vn" x="{{ s.cx }}" y="432">{{ s.n }}</text>
+    {% endfor %}
+    <text class="setor-lbl" x="150" y="516">SETOR B</text>
+  </svg>
+</div>
+
+<button class="mural-fab" id="muralFab"><i class="fas fa-comments"></i> Comunidade <span class="badge" id="muralBadge" style="display:none">0</span></button>
+
+<div class="mural-back" id="muralBack"></div>
+<aside class="mural" id="muralDrawer" aria-hidden="true">
+  <div class="mural-h">
+    <div class="mh-ic"><i class="fas fa-comments"></i></div>
+    <div><b>Comunidade</b><small>Converse e avise o estado das vagas</small></div>
+    <button class="x" id="muralX" aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+  </div>
+  <div class="mural-feed" id="muralFeed"></div>
+  <div class="mural-form" id="muralForm"></div>
+</aside>
+{% endblock %}
+
+{% block extra_js %}{% load static %}
+{{ block.super }}
+<script type="application/json" id="pageFlags">{"is_staff": {% if request.user.is_staff %}true{% else %}false{% endif %}}</script>
+<script src="{% static 'js/mapa.js' %}?v=10"></script>
+<script src="{% static 'js/crowd.js' %}?v=10"></script>
+<script src="{% static 'js/mural.js' %}?v=10"></script>
+{% endblock %}

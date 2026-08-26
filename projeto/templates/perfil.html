@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+{% block title %}Meu Perfil — Vaga Conectada{% endblock %}
+{% block page_title %}Meu Perfil{% endblock %}
+
+{% block content %}
+<div class="profile-grid">
+  <!-- Cartão de Identidade -->
+  <div class="card profile-id">
+    <div class="big-av">{{ user.username|default:"U"|first|upper }}</div>
+    <h2>{{ user.first_name|default:user.username }}</h2>
+    <div class="mail">{{ user.email|default:"sem e-mail cadastrado" }}</div>
+    <div class="uname">@{{ user.username }}</div>
+    <div class="role">
+      <i class="fas {% if user.is_staff %}fa-shield-alt{% else %}fa-user{% endif %}"></i>
+      {% if user.is_staff %}Administrador{% else %}Usuário{% endif %}
+    </div>
+
+    <div class="profile-stats">
+      <div class="ps">
+        <b>{{ entradas }}</b>
+        <span>Entradas</span>
+      </div>
+      <div class="ps">
+        <b>{{ avisos }}</b>
+        <span>Avisos</span>
+      </div>
+      <div class="ps">
+        <b>{{ user.date_joined|date:"m/y" }}</b>
+        <span>Desde</span>
+      </div>
+    </div>
+
+    {% if atual %}
+    <div style="margin-top:20px; padding:14px; background:var(--bg-0); border-radius:12px; border:1px solid var(--line);">
+      <div style="font-size:.75rem; color:var(--txt-3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px;">
+        <i class="fas fa-car"></i> Seu carro agora
+      </div>
+      <div style="font-weight:700; font-size:1rem;">{{ atual.modelo }}</div>
+      <div style="color:var(--txt-2); font-size:.85rem; margin-top:2px;">
+        · vaga {{ atual.vaga.numero }} (Setor {{ atual.vaga.setor }})
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Formulário de Edição -->
+  <div class="card profile-form">
+    <div class="body">
+      <h3><i class="fas fa-user-edit" style="color:var(--cyan)"></i> Editar informações</h3>
+      <p class="hint">O que você mudar aqui é salvo na sua conta — aparece no topo, no mural e na próxima vez que entrar.</p>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="sep"></div>
+        <h3 style="font-size:1rem; margin-bottom:16px;">Dados pessoais</h3>
+
+        <div class="field">
+          <label>Nome de usuário (não editável)</label>
+          <input type="text" value="@{{ user.username }}" readonly>
+        </div>
+
+        <div class="field">
+          <label for="new_first_name">Nome de exibição</label>
+          <input type="text" id="new_first_name" name="new_first_name" value="{{ user.first_name }}" maxlength="60" placeholder="Ex: Israel Shalomn">
+        </div>
+
+        <div class="field">
+          <label for="new_email">E-mail</label>
+          <input type="email" id="new_email" name="new_email" value="{{ user.email }}" placeholder="seu@email.com">
+        </div>
+
+        <div class="sep"></div>
+        <h3 style="font-size:1rem; margin-bottom:6px;">Alterar senha</h3>
+        <p class="hint" style="margin-bottom:18px;">Deixe em branco para manter a senha atual.</p>
+
+        <div class="row2">
+          <div class="field">
+            <label for="new_pass1">Nova senha</label>
+            <div class="pw-wrap">
+              <input type="password" id="new_pass1" name="new_pass1" placeholder="••••••••">
+              <button type="button" class="pw-toggle" onclick="toggleSenha('new_pass1', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="new_pass2">Confirmar</label>
+            <div class="pw-wrap">
+              <input type="password" id="new_pass2" name="new_pass2" placeholder="••••••••">
+              <button type="button" class="pw-toggle" onclick="toggleSenha('new_pass2', this)">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top:8px;">
+          <i class="fas fa-save"></i> Salvar alterações
+        </button>
+      </form>
+
+      <!-- Zona de Perigo -->
+      <div class="sep"></div>
+      <div class="danger-zone">
+        <div class="danger-header">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <h3>Zona de Perigo</h3>
+            <p>Excluir sua conta é permanente e não pode ser desfeito. Seu login e dados pessoais serão apagados; o histórico de movimentações do estacionamento permanece anônimo, sem vínculo com você.</p>
+          </div>
+        </div>
+
+        <div class="danger-content">
+          <button type="button" class="btn btn-danger" id="btnDeleteAccount">
+            <i class="fas fa-trash-alt"></i> Excluir minha conta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-delete">
+    <div class="modal-header">
+      <div class="icon-danger">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h2>Excluir conta permanentemente?</h2>
+      <p>Esta ação <strong>não pode ser desfeita</strong>. Por favor, confirme sua senha para continuar.</p>
+    </div>
+
+    <form id="deleteAccountForm" method="POST" action="{% url 'excluir_conta' %}">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="confirmar_senha">Digite sua senha para confirmar</label>
+        <div class="pw-wrap">
+          <input type="password" id="confirmar_senha" name="confirmar_senha" required placeholder="Sua senha atual" autocomplete="current-password">
+          <button type="button" class="pw-toggle" onclick="toggleSenha('confirmar_senha', this)">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <i class="fas fa-shield-alt"></i>
+        <span>Todos os seus dados pessoais serão permanentemente removidos.</span>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelDelete" style="flex:1;">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-danger" id="confirmDelete" style="flex:1;">
+          <i class="fas fa-trash-alt"></i> Sim, excluir minha conta
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+/* ===== ZONA DE PERIGO ===== */
+.danger-zone {
+  margin-top: 28px;
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.03), rgba(239, 68, 68, 0.01));
+}
+
+.danger-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 22px;
+  background: rgba(239, 68, 68, 0.08);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.danger-header i {
+  font-size: 1.4rem;
+  color: var(--red);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.danger-header h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+
+.danger-header p {
+  color: var(--txt-2);
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.danger-content {
+  padding: 20px 22px;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--red), #dc2626);
+  color: #fff;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.92rem;
+  font-family: inherit;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px rgba(239, 68, 68, 0.6);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+/* Modal de Exclusão */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(2, 6, 15, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s var(--ease);
+}
+
+.modal-overlay.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-delete {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 32px 80px -32px rgba(0, 0, 0, 0.9);
+  animation: slideUp 0.4s var(--ease);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 26px 26px 18px;
+  text-align: center;
+}
+
+.modal-header .icon-danger {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 14px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-header .icon-danger i {
+  font-size: 1.8rem;
+  color: var(--red);
+}
+
+.modal-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  color: var(--txt);
+  margin-bottom: 8px;
+}
+
+.modal-header p {
+  color: var(--txt-2);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.modal-header strong {
+  color: var(--red);
+}
+
+.modal-delete form {
+  padding: 0 26px 26px;
+}
+
+.warning-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  margin-top: 16px;
+}
+
+.warning-box i {
+  color: var(--red);
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.warning-box span {
+  color: var(--txt-2);
+  font-size: 0.88rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .danger-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+}
+</style>
+
+<script>
+// Olhinho de senha
+function toggleSenha(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const icon = btn.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.replace('fa-eye', 'fa-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.replace('fa-eye-slash', 'fa-eye');
+  }
+}
+
+// Modal de exclusão
+(function() {
+  const btnDelete = document.getElementById('btnDeleteAccount');
+  const modal = document.getElementById('deleteModal');
+  const btnCancel = document.getElementById('cancelDelete');
+  const form = document.getElementById('deleteAccountForm');
+
+  if (!btnDelete || !modal) return;
+
+  btnDelete.addEventListener('click', () => {
+    modal.classList.add('show');
+    document.getElementById('confirmar_senha').focus();
+    document.body.style.overflow = 'hidden';
+  });
+
+  function closeModal() {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    form.reset();
+  }
+
+  btnCancel.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
+})();
+</script>
+{% endblock %}

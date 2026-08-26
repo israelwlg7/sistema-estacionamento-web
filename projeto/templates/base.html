@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vaga Conectada{% endblock %}</title>
+  <script>(function(){try{var t=localStorage.getItem('vc-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="app" id="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark"><i class="fas fa-square-parking"></i></div>
+      <div><b>Vaga Conectada</b><small>Estacionamento &amp; Monitoramento</small></div>
+    </div>
+    <nav class="nav">
+      <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><i class="fas fa-table-cells-large"></i><span>Painel</span></a>
+      <a href="{% url 'mapa' %}" class="{% if request.resolver_match.url_name == 'mapa' %}active{% endif %}"><i class="fas fa-map-location-dot"></i><span>Mapa de Vagas</span></a>
+      <a href="{% url 'assistente' %}" class="{% if request.resolver_match.url_name == 'assistente' %}active{% endif %}"><i class="fas fa-robot"></i><span>Assistente</span></a>
+      <a href="{% url 'registrar' %}" class="{% if request.resolver_match.url_name == 'registrar' %}active{% endif %}"><i class="fas fa-circle-plus"></i><span>Registrar Entrada</span></a>
+      <a href="{% url 'suporte' %}" class="{% if request.resolver_match.url_name == 'suporte' %}active{% endif %}"><i class="fas fa-life-ring"></i><span>Suporte</span></a>
+    </nav>
+    <div class="side-foot">
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}"><i class="fas fa-right-from-bracket"></i><span>Sair</span></a>
+      {% else %}
+        <a href="{% url 'login' %}"><i class="fas fa-right-to-bracket"></i><span>Entrar / Cadastrar</span></a>
+      {% endif %}
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu"><i class="fas fa-bars"></i></button>
+      <div>
+        <div class="crumb">Vaga Conectada</div>
+        <h1>{% block page_title %}Painel{% endblock %}</h1>
+      </div>
+      <div class="top-right">
+        {% if user.is_authenticated %}
+          <div class="user-wrap">
+            <button class="user-trigger" id="userMenuBtn" aria-haspopup="true">
+              <span class="who">{{ user.first_name|default:user.username }}</span>
+              <span class="av">{{ user.username|default:"U"|first|upper }}</span>
+              <i class="fas fa-chevron-down caret"></i>
+            </button>
+            <div class="user-menu" role="menu">
+              <div class="um-head"><b>{{ user.first_name|default:user.username }}</b><small>{{ user.email|default:"sem e-mail" }}</small></div>
+              <a href="{% url 'perfil' %}"><i class="fas fa-user"></i> Meu Perfil</a>
+              <a href="{% url 'config' %}"><i class="fas fa-sliders"></i> Configurações</a>
+              <div class="um-sep"></div>
+              <a href="{% url 'logout' %}" class="danger"><i class="fas fa-right-from-bracket"></i> Sair</a>
+            </div>
+          </div>
+        {% else %}
+          <span class="pill" style="color:var(--amber)"><i class="fas fa-eye"></i> Visitante</span>
+        {% endif %}
+        <button class="theme-btn" id="themeBtn" aria-label="Alternar tema"><i class="fas fa-sun"></i></button>
+        <span class="clock mono" id="clock">--:--:--</span>
+      </div>
+    </header>
+
+    <div class="content">
+      {% if messages %}
+        {% for m in messages %}
+        <div class="flash {{ m.tags }}"><span>{{ m }}</span><button class="x" onclick="this.parentElement.style.display='none'" aria-label="Fechar"><i class="fas fa-xmark"></i></button></div>
+        {% endfor %}
+      {% endif %}
+
+      {% if not user.is_authenticated %}
+      <div class="visitor reveal">
+        <i class="fas fa-user-shield"></i>
+        <div>
+          <b>Você está no Modo Visitante</b>
+          <p>Pode navegar e ver os dados em tempo real, mas registrar entradas/saídas está bloqueado.
+             <a href="{% url 'login' %}">Crie uma conta ou faça login</a> para liberar tudo.</p>
+        </div>
+        <button class="x" onclick="this.parentElement.style.display='none'" aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+      </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<nav class="bottomnav">
+  <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}on{% endif %}"><i class="fas fa-house"></i>Início</a>
+  <a href="{% url 'mapa' %}" class="{% if request.resolver_match.url_name == 'mapa' %}on{% endif %}"><i class="fas fa-map"></i>Mapa</a>
+  <a href="{% url 'assistente' %}" class="{% if request.resolver_match.url_name == 'assistente' %}on{% endif %}"><i class="fas fa-robot"></i>IA</a>
+  <a href="{% url 'registrar' %}" class="{% if request.resolver_match.url_name == 'registrar' %}on{% endif %}"><i class="fas fa-plus"></i>Entrada</a>
+</nav>
+
+<script src="{% static 'js/api.js' %}?v=2"></script>
+<script src="{% static 'js/auth.js' %}?v=2"></script>
+<script src="{% static 'js/app.js' %}?v=2"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Vaga Conectada</title>
+  <script>(function(){try{var t=localStorage.getItem('vc-theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=8">
+  <style>
+  :root{ --ease:cubic-bezier(.22,1,.36,1); }
+  .auth-card,.auth-card *,.auth-card *::before,.auth-card *::after{ box-sizing:border-box !important; }
+  .auth-card *{ min-width:0; }
+
+  body.auth-page{ display:grid !important; place-items:center !important; min-height:100vh !important; margin:0 !important; padding:24px !important; overflow:hidden !important; position:relative;
+    background:radial-gradient(120% 85% at 50% -10%, #ffffff 0%, #eaf0fa 48%, #dde7f5 100%) !important; }
+  body.auth-page::before{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.55;
+    background-image:linear-gradient(rgba(37,99,235,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(37,99,235,.06) 1px, transparent 1px); background-size:46px 46px;
+    -webkit-mask-image:radial-gradient(ellipse 92% 72% at 50% 0%, #000 28%, transparent 80%); mask-image:radial-gradient(ellipse 92% 72% at 50% 0%, #000 28%, transparent 80%); }
+  body.auth-page::after{ content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:radial-gradient(30rem 26rem at 8% 4%, rgba(45,212,191,.14), transparent 60%),radial-gradient(28rem 24rem at 96% 100%, rgba(59,130,246,.14), transparent 60%); }
+
+  /* CARD: largura TRAVADA em 480px (atende o form de cadastro). Não muda entre abas. */
+  .auth-card{ position:relative; z-index:1; display:flex !important; align-items:stretch;
+    width:480px !important;
+    min-width:480px !important;
+    max-width:calc(100% - 40px) !important;
+    margin:0 !important; overflow:hidden;
+    background:#fff !important; border:1px solid #e6ebf3 !important; border-radius:24px !important;
+    box-shadow:0 1px 0 rgba(255,255,255,.9) inset, 0 34px 80px -44px rgba(30,58,110,.5) !important;
+    transition:width .55s var(--ease); animation:cardIn .6s var(--ease) both; }
+  @keyframes cardIn{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+  .auth-card.open{ width:880px !important; }
+
+  .ab-side{ flex:0 0 0px; width:0; min-width:0; overflow:hidden; opacity:0;
+    background:linear-gradient(160deg,#0e2747 0%, #0b1c33 100%); position:relative;
+    transition:flex-basis .55s var(--ease), opacity .4s ease .08s; }
+  .auth-card.open .ab-side{ flex-basis:400px; opacity:1; }
+  .ab-side::after{ content:""; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(24rem 18rem at 0% 0%, rgba(56,189,248,.18), transparent 60%),radial-gradient(20rem 16rem at 100% 100%, rgba(45,212,191,.14), transparent 60%); }
+  .ab-inner{ position:relative; z-index:1; width:400px; min-width:400px; height:100%; padding:42px 36px;
+    display:flex; flex-direction:column; justify-content:center; gap:22px; }
+  .ab-live{ display:inline-flex; align-items:center; gap:8px; align-self:flex-start; padding:5px 12px; border-radius:999px;
+    background:rgba(45,212,191,.14); color:#0d9488; font-size:.72rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; }
+  .ab-live i{ width:7px; height:7px; border-radius:50%; background:#2dd4bf; box-shadow:0 0 0 0 rgba(45,212,191,.6); animation:livePing 2s infinite; }
+  @keyframes livePing{ 0%{box-shadow:0 0 0 0 rgba(45,212,191,.5)} 70%{box-shadow:0 0 0 7px rgba(45,212,191,0)} 100%{box-shadow:0 0 0 0 rgba(45,212,191,0)} }
+  .ab-mark{ width:54px; height:54px; border-radius:15px; display:grid; place-items:center; font-size:1.45rem; background:linear-gradient(135deg,#38bdf8,#2563eb); color:#fff; box-shadow:0 12px 30px -10px rgba(56,189,248,.7); }
+  .ab-inner h2{ font-family:'Space Grotesk',sans-serif; font-size:1.8rem; color:#fff; line-height:1.1; margin-top:4px; }
+  .ab-inner p{ color:#bcd0ea; line-height:1.6; font-size:.95rem; max-width:32ch; }
+  .ab-feats{ list-style:none; display:flex; flex-direction:column; gap:13px; }
+  .ab-feats li{ display:flex; gap:12px; align-items:center; color:#cfe0f5; font-size:.92rem; font-weight:600; opacity:0; transform:translateX(-14px); transition:.5s var(--ease); }
+  .auth-card.open .ab-feats li{ opacity:1; transform:none; }
+  .auth-card.open .ab-feats li:nth-child(1){ transition-delay:.14s; }
+  .auth-card.open .ab-feats li:nth-child(2){ transition-delay:.22s; }
+  .auth-card.open .ab-feats li:nth-child(3){ transition-delay:.30s; }
+  .ab-feats i{ width:36px; height:36px; border-radius:10px; display:grid; place-items:center; flex:none; font-size:.9rem; background:rgba(45,212,191,.16); color:#2dd4bf; transition:.25s; }
+  .ab-feats li:hover i{ transform:scale(1.12) rotate(-6deg); background:rgba(45,212,191,.26); }
+  .ab-copy{ color:#7e93b3; font-size:.78rem; }
+  .ab-x{ position:absolute; top:16px; right:16px; z-index:2; width:34px; height:34px; border-radius:50%; cursor:pointer;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); color:#bcd0ea; display:grid; place-items:center; transition:.25s; }
+  .ab-x:hover{ color:#fff; background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.5); transform:rotate(90deg); }
+
+  .ab-body{ flex:1 1 0; min-width:0; padding:34px 40px 30px; display:flex; flex-direction:column; }
+  .ab-stack{ width:100%; max-width:400px; margin-inline:auto; transition:max-width .55s var(--ease); }
+  .auth-card.open .ab-stack{ max-width:320px; }
+
+  .about-icon{ position:absolute; top:14px; right:14px; z-index:3; width:34px; height:34px; border-radius:50%;
+    display:grid; place-items:center; cursor:pointer; background:#f1f5fb; border:1px solid #e3e9f2; color:#94a3b8; font-size:.88rem; transition:.3s var(--ease); }
+  .about-icon:hover{ color:#2563eb; border-color:#bcd2f7; background:#eaf2ff; transform:scale(1.12) rotate(8deg); }
+  .about-icon.on{ color:#2563eb; border-color:#bcd2f7; background:#eaf2ff; }
+
+  .theme-float{ position:fixed; top:18px; right:18px; z-index:50; width:42px; height:42px; border-radius:50%; display:grid; place-items:center; cursor:pointer; font-size:1rem;
+    background:rgba(255,255,255,.85); border:1px solid #e3e9f2; color:#5b6b82; backdrop-filter:blur(8px); box-shadow:0 8px 22px -10px rgba(30,58,110,.4); transition:.25s var(--ease); }
+  .theme-float:hover{ color:#2563eb; border-color:#bcd2f7; transform:rotate(20deg) scale(1.06); }
+
+  .ab-brand{ display:flex; align-items:center; justify-content:center; gap:11px; margin:0 0 22px; }
+  .ab-brand .mk{ width:42px; height:42px; flex:none; border-radius:13px; display:grid; place-items:center; font-size:1.2rem; background:linear-gradient(135deg,#38bdf8,#2563eb); color:#fff; box-shadow:0 10px 24px -10px rgba(37,99,235,.65); animation:mkPulse 3.6s ease-in-out infinite; }
+  @keyframes mkPulse{ 0%,100%{box-shadow:0 10px 24px -10px rgba(37,99,235,.5)} 50%{box-shadow:0 10px 28px -8px rgba(37,99,235,.9)} }
+  .ab-brand b{ font-family:'Space Grotesk',sans-serif; font-size:1.18rem; color:#0f1b2d; letter-spacing:-.02em; white-space:nowrap; }
+
+  .ab-tabs{ display:flex; gap:5px; background:#f1f5fb; padding:5px; border-radius:13px; border:1px solid #e9eef6; margin-bottom:22px; }
+  .ab-tabs button{ flex:1; height:42px; border:none; background:none; cursor:pointer; border-radius:9px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:.9rem; color:#94a3b8; transition:.25s; }
+  .ab-tabs button.on{ background:#fff; color:#0f1b2d; box-shadow:0 2px 8px -4px rgba(30,58,110,.3); }
+  .ab-tabs button:hover:not(.on){ color:#475569; }
+
+  .ab-body h3{ font-family:'Space Grotesk',sans-serif; font-size:1.34rem; color:#0f1b2d; text-align:center; letter-spacing:-.02em; }
+  .ab-body .sub{ color:#7c8aa0; font-size:.9rem; margin:5px 0 20px; text-align:center; }
+
+  .ab-body .field{ margin-bottom:14px; }
+  .ab-body .field label{ display:block; font-size:.78rem; font-weight:700; color:#5b6b82; margin-bottom:7px; transition:color .2s; }
+  .ab-body .field:focus-within label{ color:#2563eb; }
+  .ab-body .field input{ width:100%; height:50px; padding:0 15px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.98rem; background:#f7f9fc; border:1px solid #e3e9f2; border-radius:12px; color:#0f1b2d; transition:.2s; }
+  .ab-body .field input:focus{ outline:none; background:#fff; border-color:#2563eb; box-shadow:0 0 0 4px rgba(37,99,235,.13); }
+  .ab-body .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ab-err{ display:flex; gap:9px; align-items:center; background:#fef2f2; border:1px solid #fecaca; color:#dc2626; padding:11px 14px; border-radius:11px; margin-bottom:15px; font-size:.86rem; }
+
+  .ab-body .btn.btn-full{ position:relative; overflow:hidden; justify-content:center; height:50px; padding:0 18px; border:none; border-radius:12px; cursor:pointer; margin-top:4px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:.98rem; color:#fff; background:linear-gradient(135deg,#38bdf8,#2563eb); box-shadow:0 12px 24px -14px rgba(37,99,235,.7); transition:transform .18s, box-shadow .25s, filter .25s; }
+  .ab-body .btn.btn-full::before{ content:""; position:absolute; top:0; left:-120%; width:55%; height:100%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent); transform:skewX(-18deg); transition:left .6s; }
+  .ab-body .btn.btn-full:hover{ transform:translateY(-2px); filter:brightness(1.05); box-shadow:0 16px 30px -14px rgba(37,99,235,.85); }
+  .ab-body .btn.btn-full:hover::before{ left:130%; }
+  .ab-body .btn.btn-full:active{ transform:translateY(0) scale(.985); }
+
+  .ab-body .divider{ display:flex; align-items:center; gap:13px; color:#aab6c8; font-size:.76rem; margin:18px 0; }
+  .ab-body .divider::before,.ab-body .divider::after{ content:""; flex:1; height:1px; background:#e9eef6; }
+  .ab-body .social{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  .ab-body .social button{ position:relative; display:flex; align-items:center; justify-content:center; gap:8px; height:46px; border-radius:12px; background:#f7f9fc; border:1px solid #e3e9f2; color:#334155; font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:.88rem; cursor:pointer; transition:.2s; overflow:hidden; }
+  .ab-body .social button:hover{ background:#fff; border-color:#cdd9ec; transform:translateY(-2px); box-shadow:0 8px 18px -12px rgba(30,58,110,.4); }
+  .ab-body .social button .soon{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,#38bdf8,#2563eb); color:#fff; font-weight:700; font-size:.8rem; opacity:0; transform:translateY(100%); transition:.3s var(--ease); }
+  .ab-body .social button:hover .soon{ opacity:1; transform:none; }
+  .ab-body .guest{ display:flex; align-items:center; justify-content:center; gap:8px; height:46px; margin-top:12px; border-radius:12px; border:1px dashed #d3dcec; color:#64748b; font-weight:600; font-size:.88rem; text-decoration:none; transition:.2s; }
+  .ab-body .guest:hover{ border-color:#2563eb; color:#2563eb; border-style:solid; }
+  .ab-foot{ text-align:center; color:#94a3b8; font-size:.85rem; margin-top:16px; }
+  .ab-foot a{ color:#2563eb; font-weight:700; }
+  .ab-panel{ display:none; animation:fade .35s ease; } .ab-panel.on{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none} }
+
+  .ab-back{ display:none; position:fixed; inset:0; z-index:94; background:rgba(15,27,45,.4); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); opacity:0; visibility:hidden; transition:.3s; }
+  .ab-back.show{ opacity:1; visibility:visible; }
+
+  :root:not([data-theme="light"]) body.auth-page{ background:radial-gradient(120% 85% at 50% -10%, #1a2740 0%, #131d2e 50%, #0f1726 100%) !important; }
+  :root:not([data-theme="light"]) body.auth-page::before{ background-image:linear-gradient(rgba(125,211,252,.06) 1px, transparent 1px),linear-gradient(90deg, rgba(125,211,252,.06) 1px, transparent 1px); }
+  :root:not([data-theme="light"]) body.auth-page::after{ background:radial-gradient(30rem 26rem at 8% 4%, rgba(45,212,191,.12), transparent 60%),radial-gradient(28rem 24rem at 96% 100%, rgba(59,130,246,.12), transparent 60%); }
+  :root:not([data-theme="light"]) .theme-float{ background:rgba(25,34,47,.85); border-color:rgba(148,163,184,.18); color:#9aa9c0; box-shadow:0 8px 22px -10px rgba(0,0,0,.6); }
+  :root:not([data-theme="light"]) .theme-float:hover{ color:#7dd3fc; border-color:#2b4a6b; }
+  :root:not([data-theme="light"]) .auth-card{ background:#19222f !important; border-color:rgba(148,163,184,.16) !important; box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 34px 80px -44px rgba(0,0,0,.7) !important; }
+  :root:not([data-theme="light"]) .about-icon{ background:#202b3a; border-color:rgba(148,163,184,.16); color:#9aa9c0; }
+  :root:not([data-theme="light"]) .about-icon:hover,:root:not([data-theme="light"]) .about-icon.on{ color:#7dd3fc; border-color:#2b4a6b; background:#223044; }
+  :root:not([data-theme="light"]) .ab-brand b{ color:#e8edf6; }
+  :root:not([data-theme="light"]) .ab-tabs{ background:#111926; border-color:rgba(148,163,184,.14); }
+  :root:not([data-theme="light"]) .ab-tabs button.on{ background:#2a3646; color:#fff; box-shadow:none; }
+  :root:not([data-theme="light"]) .ab-tabs button:hover:not(.on){ color:#cdd7e6; }
+  :root:not([data-theme="light"]) .ab-body h3{ color:#e8edf6; }
+  :root:not([data-theme="light"]) .ab-body .field label{ color:#9aa9c0; }
+  :root:not([data-theme="light"]) .ab-body .field input{ background:#111926; border-color:rgba(148,163,184,.16); color:#e8edf6; }
+  :root:not([data-theme="light"]) .ab-body .field input:focus{ background:#0f1726; border-color:#38bdf8; box-shadow:0 0 0 4px rgba(56,189,248,.16); }
+  :root:not([data-theme="light"]) .ab-body .social button{ background:#111926; border-color:rgba(148,163,184,.16); color:#cdd7e6; }
+  :root:not([data-theme="light"]) .ab-body .guest{ border-color:rgba(148,163,184,.22); color:#9aa9c0; }
+  :root:not([data-theme="light"]) .ab-body .guest:hover{ border-color:#38bdf8; color:#7dd3fc; }
+  :root:not([data-theme="light"]) .ab-body .divider::before,:root:not([data-theme="light"]) .ab-body .divider::after{ background:rgba(148,163,184,.16); }
+
+  @media (max-width:899px){
+    .auth-card,.auth-card.open{ width:min(480px, calc(100% - 32px)) !important; min-width:0 !important; }
+    .ab-side{ position:fixed; left:0; top:0; height:100vh; width:min(380px,86vw); flex:none; overflow:visible; opacity:1; transform:translateX(-100%); z-index:95; box-shadow:30px 0 70px -40px rgba(0,0,0,.6); transition:transform .44s var(--ease); }
+    .auth-card.open .ab-side{ transform:none; flex-basis:auto; }
+    .ab-inner{ width:100%; min-width:0; }
+    .auth-card.open .ab-stack{ max-width:400px; }
+    .ab-body{ padding:30px 24px 26px; }
+    .ab-back{ display:block; }
+  }
+  @media (max-width:560px){ .row2,.social{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body class="auth-page">
+  <button class="theme-float" id="themeBtn" aria-label="Alternar tema"><i class="fas fa-sun"></i></button>
+
+  <div class="auth-card" id="authCard">
+    <aside class="ab-side">
+      <button class="ab-x" id="aboutDX" aria-label="Fechar"><i class="fas fa-xmark"></i></button>
+      <div class="ab-inner">
+        <span class="ab-live"><i></i> sistema online</span>
+        <div class="ab-mark"><i class="fas fa-square-parking"></i></div>
+        <h2>Vaga Conectada</h2>
+        <p>Estacionamento inteligente com monitoramento em tempo real e mapa interativo de vagas.</p>
+        <ul class="ab-feats">
+          <li><i class="fas fa-bolt"></i> Mapa de vagas atualizado a cada 10s</li>
+          <li><i class="fas fa-robot"></i> Assistente virtual que consulta o sistema</li>
+          <li><i class="fas fa-comments"></i> Mural da comunidade ao vivo</li>
+        </ul>
+        <div class="ab-copy">© 2026 Vaga Conectada</div>
+      </div>
+    </aside>
+
+    <div class="ab-body">
+      <button type="button" class="about-icon" id="aboutIcon" aria-label="Conhecer o Vaga Conectada" aria-expanded="false" title="Conhecer o Vaga Conectada"><i class="fas fa-circle-info"></i></button>
+
+      <div class="ab-stack">
+        <div class="ab-brand"><span class="mk"><i class="fas fa-square-parking"></i></span><b>Vaga Conectada</b></div>
+        <div class="ab-tabs">
+          <button type="button" class="{% if request.GET.tab != 'register' %}on{% endif %}" data-tab="login">Entrar</button>
+          <button type="button" class="{% if request.GET.tab == 'register' %}on{% endif %}" data-tab="register">Criar conta</button>
+        </div>
+
+        {% if messages %}{% for m in messages %}
+        <div class="ab-err"><i class="fas fa-circle-{% if m.tags == 'success' %}check{% else %}exclamation{% endif %}"></i> {{ m }}</div>
+        {% endfor %}{% endif %}
+
+        <form method="POST" action="{% url 'login' %}" class="ab-panel {% if request.GET.tab != 'register' %}on{% endif %}" data-panel="login">
+          {% csrf_token %}
+          <h3>Bem-vindo de volta!</h3>
+          <p class="sub">Faça login para acessar sua conta</p>
+          {% if form.errors %}<div class="ab-err"><i class="fas fa-circle-exclamation"></i> Usuário/e‑mail ou senha inválidos.</div>{% endif %}
+          <div class="field"><label>Usuário ou e‑mail</label>{{ form.username }}</div>
+          <div class="field"><label>Senha</label>{{ form.password }}</div>
+          <button class="btn btn-full" type="submit"><i class="fas fa-right-to-bracket"></i> Entrar</button>
+          <div class="divider">ou continue com</div>
+          <div class="social">
+            <button type="button" data-soon="google"><i class="fab fa-google"></i> Google<span class="soon">Em breve</span></button>
+            <button type="button" data-soon="microsoft"><i class="fab fa-microsoft"></i> Microsoft<span class="soon">Em breve</span></button>
+          </div>
+          <a class="guest" href="{% url 'dashboard' %}"><i class="fas fa-user"></i> Entrar como Visitante</a>
+          <p class="ab-foot">Não tem uma conta? <a href="#" data-goto="register">Cadastre-se</a></p>
+        </form>
+
+        <form method="POST" action="{% url 'login' %}" class="ab-panel {% if request.GET.tab == 'register' %}on{% endif %}" data-panel="register">
+          {% csrf_token %}
+          <h3>Crie sua conta</h3>
+          <p class="sub">Leva menos de um minuto</p>
+          <div class="field"><label>Nome completo</label><input type="text" name="full_name" placeholder="Seu nome" maxlength="60"></div>
+          <div class="field"><label>E-mail</label><input type="email" name="email" placeholder="voce@email.com" maxlength="120"></div>
+          <div class="row2">
+            <div class="field"><label>Senha</label><input type="password" name="pass1" placeholder="••••••••" maxlength="40"></div>
+            <div class="field"><label>Confirmar</label><input type="password" name="pass2" placeholder="••••••••" maxlength="40"></div>
+          </div>
+          <button class="btn btn-full" type="submit"><i class="fas fa-user-plus"></i> Criar conta</button>
+          <p class="ab-foot">Já tem conta? <a href="#" data-goto="login">Fazer login</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="ab-back" id="aboutBack"></div>
+
+  <script src="{% static 'js/app.js' %}?v=8"></script>
+  <script>
+  (function(){
+    var card=document.getElementById('authCard'), icon=document.getElementById('aboutIcon'),
+        back=document.getElementById('aboutBack'), dx=document.getElementById('aboutDX');
+    function openP(){ card.classList.add('open'); back.classList.add('show'); icon.classList.add('on'); icon.querySelector('i').className='fas fa-xmark'; icon.setAttribute('aria-expanded','true'); }
+    function closeP(){ card.classList.remove('open'); back.classList.remove('show'); icon.classList.remove('on'); icon.querySelector('i').className='fas fa-circle-info'; icon.setAttribute('aria-expanded','false'); }
+    icon.addEventListener('click', function(){ card.classList.contains('open') ? closeP() : openP(); });
+    dx.addEventListener('click', closeP);
+    back.addEventListener('click', closeP);
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeP(); });
+    document.addEventListener('click', function(e){ if(card.classList.contains('open') && !card.contains(e.target)) closeP(); });
+
+    var go = function(mode){
+      document.querySelectorAll('[data-tab]').forEach(function(x){ x.classList.toggle('on', x.dataset.tab===mode); });
+      document.querySelectorAll('[data-panel]').forEach(function(p){ p.classList.toggle('on', p.dataset.panel===mode); });
+    };
+    document.querySelectorAll('[data-tab]').forEach(function(b){ b.addEventListener('click', function(){ go(b.dataset.tab); }); });
+    document.querySelectorAll('[data-goto]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); go(a.dataset.goto); }); });
+    document.querySelectorAll('[data-soon]').forEach(function(b){ b.addEventListener('click', function(){
+      vcToast('Login com ' + (b.dataset.soon==='google'?'Google':'Microsoft') + ' disponível em breve', 'info');
+    }); });
+
+    document.querySelectorAll('input[type="password"]').forEach(function(inp){
+      var wrap=document.createElement('div'); wrap.className='pw-wrap';
+      inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp); inp.style.paddingRight='44px';
+      var btn=document.createElement('button'); btn.type='button'; btn.className='pw-toggle'; btn.setAttribute('aria-label','Mostrar senha');
+      btn.innerHTML='<i class="fas fa-eye"></i>'; wrap.appendChild(btn);
+      btn.addEventListener('click', function(){ var show=inp.type==='password'; inp.type=show?'text':'password';
+        btn.innerHTML='<i class="fas '+(show?'fa-eye-slash':'fa-eye')+'"></i>'; });
+    });
+  })();
+  </script>
+</body>
+</html>

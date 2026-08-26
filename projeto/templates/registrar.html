@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}Registrar Entrada — Vaga Conectada{% endblock %}
+{% block page_title %}Registrar Entrada{% endblock %}
+
+{% block content %}
+<div class="card form-card reveal">
+  <div class="card-h"><h2><i class="fas fa-circle-plus"></i> Registrar Entrada de Veículo</h2></div>
+  <div class="body">
+    {% if not liberado %}
+    <div class="block-note"><i class="fas fa-lock"></i> Ação bloqueada no Modo Visitante. Faça login para emitir tickets.</div>
+    {% endif %}
+
+    <form id="formEntrada">
+      <div class="field">
+        <label>Vaga livre</label>
+        <select id="vaga" name="vaga" {% if not liberado %}disabled{% endif %}>
+          <option value="">carregando vagas…</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Placa do Veículo <small style="color:var(--txt-3)">(opcional)</small></label>
+        <input type="text" id="placa" name="placa" placeholder="ABC-1234" maxlength="8" {% if not liberado %}disabled{% endif %}>
+        <div class="plate-hint">Aceita <b>ABC-1234</b> (antiga) e <b>ABC-1D23</b> (Mercosul) · formata sozinho</div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Modelo</label><input type="text" name="modelo" placeholder="Ex: Onix" maxlength="40" required {% if not liberado %}disabled{% endif %}></div>
+        <div class="field"><label>Cor</label><input type="text" name="cor" placeholder="Ex: Prata" maxlength="20" {% if not liberado %}disabled{% endif %}></div>
+      </div>
+      <button class="btn btn-primary btn-full" type="submit" {% if not liberado %}disabled{% endif %}><i class="fas fa-ticket"></i> Emitir Ticket de Entrada</button>
+    </form>
+
+    <div class="ticket" id="ticket" style="display:none">
+      <div style="color:var(--txt-2);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em">Ticket emitido · salvo no sistema</div>
+      <div class="big" id="ticketPlaca">—</div>
+      <div style="color:var(--txt-2);font-size:.85rem;margin-top:6px" id="ticketVaga"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  const sel = document.getElementById('vaga');
+  const form = document.getElementById('formEntrada');
+  if(!sel) return;
+
+  // toast simples
+  function toast(msg,type){
+    let w=document.getElementById('toastWrap');
+    if(!w){ w=document.createElement('div'); w.id='toastWrap'; w.className='toast-wrap'; document.body.appendChild(w); }
+    const ic=type==='ok'?'fa-circle-check':type==='err'?'fa-circle-exclamation':'fa-circle-info';
+    const t=document.createElement('div'); t.className='toast '+type;
+    t.innerHTML='<i class="fas '+ic+'"></i><span>'+msg+'</span>'; w.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},3200);
+  }
+
+  async function carregarVagas(){
+    try{
+      const d = await API.get('/api/vagas/');
+      const livres = (d.vagas||[]).filter(v=>v.status==='LIVRE').sort((a,b)=>a.numero-b.numero);
+      sel.innerHTML = livres.length
+        ? '<option value="">— escolha uma vaga —</option>' + livres.map(v=>'<option value="'+v.id+'">Vaga '+v.numero+' (Setor '+v.setor+')</option>').join('')
+        : '<option value="">nenhuma vaga livre no momento</option>';
+    }catch(e){ sel.innerHTML='<option value="">erro ao carregar vagas</option>'; }
+  }
+  carregarVagas();
+
+  // máscara de placa
+  const pl = document.getElementById('placa');
+  pl.addEventListener('input', ()=>{ let v=pl.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,7); pl.value = v.length>3 ? v.slice(0,3)+'-'+v.slice(3) : v; });
+
+  form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    const btn=form.querySelector('button[type=submit]'); btn.disabled=true;
+    try{
+      const r = await API.post('/api/entrada/', {
+        placa: pl.value.trim(), modelo: form.modelo.value.trim(),
+        cor: form.cor.value.trim(), vaga_id: sel.value
+      });
+      if(!r.success) throw new Error(r.error||'erro');
+      document.getElementById('ticketPlaca').textContent = pl.value.trim()||'SEM PLACA';
+      document.getElementById('ticketVaga').textContent = 'Vaga '+r.veiculo.vaga+' · R$ 10,00/hora';
+      document.getElementById('ticket').style.display='block';
+      toast('Entrada registrada e salva no sistema! 🎫','ok');
+      carregarVagas();   // a vaga some das livres
+      form.modelo.value=''; form.cor.value=''; pl.value='';
+    }catch(err){
+      toast((err&&err.message)?err.message:'Não foi possível registrar.','err');
+    }finally{ btn.disabled=false; }
+  });
+})();
+</script>
+{% endblock %}

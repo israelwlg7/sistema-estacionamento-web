@@ -1,0 +1,503 @@
+{% extends 'base.html' %}
+{% block title %}Suporte & Ocorrências — Vaga Conectada{% endblock %}
+{% block page_title %}Suporte{% endblock %}
+
+{% block content %}
+<div class="suporte-container">
+  <!-- Card Principal -->
+  <div class="suporte-card">
+    <h2><i class="fas fa-headset"></i> Central de Suporte</h2>
+    <p class="suporte-info">
+      Aconteceu algo no estacionamento? Acidente, dano no veículo ou outro problema — conte pra gente com o máximo de detalhes.
+    </p>
+
+    {% if not user.is_authenticated %}
+      <div class="login-prompt">
+        <i class="fas fa-info-circle"></i>
+        <div class="text">
+          <strong>Você está no Modo Visitante</strong>
+          <p>Faça login para registrar ocorrências e acompanhar o status dos seus chamados.</p>
+        </div>
+        <a href="{% url 'login' %}" class="btn">
+          <i class="fas fa-sign-in-alt"></i> Fazer Login
+        </a>
+      </div>
+    {% else %}
+      <form method="POST" class="suporte-form">
+        {% csrf_token %}
+        
+        <div class="field">
+          <label for="id_tipo">Tipo de ocorrência</label>
+          {{ form.tipo }}
+        </div>
+
+        <div class="field">
+          <label for="id_titulo">Título do chamado</label>
+          {{ form.titulo }}
+          <div class="field-hint">
+            <i class="fas fa-info-circle"></i>
+            <span>Resumo curto do problema (ex: Bateria arrombada, Farol quebrado)</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="id_placa_veiculo">Placa do veículo <small style="color:var(--txt-3)">(opcional)</small></label>
+          {{ form.placa_veiculo }}
+          <div class="field-hint">
+            <i class="fas fa-car"></i>
+            <span>Mercosul <b>ABC1D23</b> ou antiga <b>ABC-1234</b></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="id_descricao">Descreva o que aconteceu</label>
+          {{ form.descricao }}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-submit">
+          <i class="fas fa-paper-plane"></i> Enviar chamado
+        </button>
+      </form>
+    {% endif %}
+  </div>
+
+  <!-- Contato Rápido -->
+  <div class="suporte-card">
+    <h2><i class="fas fa-phone-alt"></i> Contato Rápido</h2>
+    <p class="suporte-info">
+      Precisa de ajuda urgente ou demoramos para responder? Entre em contato diretamente:
+    </p>
+    <div class="contato-grid">
+      <div class="contato-item">
+        <i class="fab fa-whatsapp"></i>
+        <div>
+          <strong>WhatsApp</strong>
+          <span>(11) 99999-0000</span>
+          <small>Seg-Sex, 8h às 18h</small>
+        </div>
+        <a href="https://wa.me/5511999990000" target="_blank" class="btn-contato">
+          <i class="fas fa-external-link-alt"></i> Abrir
+        </a>
+      </div>
+      <div class="contato-item">
+        <i class="fas fa-envelope"></i>
+        <div>
+          <strong>E-mail</strong>
+          <span>suporte@vagaconectada.com</span>
+          <small>Resposta em até 24h</small>
+        </div>
+        <a href="mailto:suporte@vagaconectada.com" class="btn-contato">
+          <i class="fas fa-external-link-alt"></i> Enviar
+        </a>
+      </div>
+      <div class="contato-item">
+        <i class="fas fa-phone"></i>
+        <div>
+          <strong>Telefone</strong>
+          <span>(11) 3333-0000</span>
+          <small>Seg-Sex, 9h às 17h</small>
+        </div>
+        <a href="tel:+551133330000" class="btn-contato">
+          <i class="fas fa-external-link-alt"></i> Ligar
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Ocorrências -->
+  {% if user.is_authenticated %}
+  <div class="ocorrencias-list">
+    <h3><i class="fas fa-list"></i> Meus Chamados</h3>
+    
+    {% if ocorrencias %}
+      {% for oc in ocorrencias %}
+      <div class="ocorrencia-item">
+        <div class="ocorrencia-header">
+          <span class="ocorrencia-status {{ oc.status|lower }}">
+            {{ oc.get_status_display }}
+          </span>
+          <span class="ocorrencia-data">
+            {{ oc.criado_em|date:"d/m/Y H:i" }}
+          </span>
+        </div>
+        <div class="ocorrencia-titulo">{{ oc.titulo }}</div>
+        <div class="ocorrencia-descricao">{{ oc.descricao|truncatewords:30 }}</div>
+        <div class="ocorrencia-meta">
+          {% if oc.placa_veiculo %}
+          <span><i class="fas fa-car"></i> {{ oc.placa_veiculo }}</span>
+          {% endif %}
+          <span><i class="fas fa-tag"></i> {{ oc.get_tipo_display }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>Nenhuma ocorrência registrada por você até o momento.</p>
+      </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+<style>
+.suporte-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.suporte-card {
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+
+.suporte-card h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.suporte-info {
+  color: var(--txt-2);
+  font-size: 0.92rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.suporte-form .field {
+  margin-bottom: 18px;
+}
+
+.suporte-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--txt-2);
+  margin-bottom: 8px;
+}
+
+.suporte-form select,
+.suporte-form input,
+.suporte-form textarea {
+  width: 100%;
+  padding: 11px 13px;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: var(--txt);
+  font-family: inherit;
+  font-size: 0.93rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.suporte-form select:focus,
+.suporte-form input:focus,
+.suporte-form textarea:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+}
+
+.suporte-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.field-hint {
+  font-size: 0.73rem;
+  color: var(--txt-3);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.field-hint i {
+  color: var(--cyan);
+}
+
+.field-hint b {
+  color: var(--txt-2);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--cyan), var(--blue));
+  color: var(--on-accent);
+  border: none;
+  border-radius: 11px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 6px;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -10px var(--cyan);
+}
+
+.login-prompt {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.02));
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  border-radius: var(--r);
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.login-prompt i {
+  font-size: 1.4rem;
+  color: var(--amber);
+}
+
+.login-prompt .text {
+  flex: 1;
+}
+
+.login-prompt .text strong {
+  color: var(--amber);
+  display: block;
+  margin-bottom: 3px;
+  font-size: 0.95rem;
+}
+
+.login-prompt .text p {
+  color: var(--txt-2);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.login-prompt .btn {
+  padding: 9px 18px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.login-prompt .btn:hover {
+  background: var(--cyan);
+}
+
+/* Contato Rápido */
+.contato-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.contato-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+
+.contato-item:hover {
+  border-color: var(--line-2);
+}
+
+.contato-item > i {
+  font-size: 1.8rem;
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+.contato-item > div {
+  flex: 1;
+}
+
+.contato-item strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--txt);
+  margin-bottom: 2px;
+}
+
+.contato-item span {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--txt-2);
+  margin-bottom: 2px;
+}
+
+.contato-item small {
+  font-size: 0.75rem;
+  color: var(--txt-3);
+}
+
+.btn-contato {
+  padding: 8px 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--txt-2);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-contato:hover {
+  background: var(--cyan);
+  color: var(--on-accent);
+  border-color: var(--cyan);
+}
+
+/* Ocorrências */
+.ocorrencias-list {
+  margin-top: 30px;
+}
+
+.ocorrencias-list h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.ocorrencia-item {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 15px 18px;
+  margin-bottom: 11px;
+  transition: border-color 0.2s;
+}
+
+.ocorrencia-item:hover {
+  border-color: var(--line-2);
+}
+
+.ocorrencia-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+
+.ocorrencia-status {
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+
+.ocorrencia-status.pendente {
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--amber);
+}
+
+.ocorrencia-status.em_analise {
+  background: rgba(56, 189, 248, 0.14);
+  color: var(--cyan);
+}
+
+.ocorrencia-status.resolvido {
+  background: rgba(34, 197, 94, 0.14);
+  color: var(--green);
+}
+
+.ocorrencia-data {
+  font-size: 0.78rem;
+  color: var(--txt-3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ocorrencia-titulo {
+  font-weight: 700;
+  font-size: 0.98rem;
+  margin-bottom: 5px;
+  color: var(--txt);
+}
+
+.ocorrencia-descricao {
+  color: var(--txt-2);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+
+.ocorrencia-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 0.78rem;
+  color: var(--txt-3);
+  flex-wrap: wrap;
+}
+
+.ocorrencia-meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 44px 22px;
+  color: var(--txt-3);
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.empty-state i {
+  font-size: 2.8rem;
+  opacity: 0.35;
+  margin-bottom: 11px;
+}
+
+.empty-state p {
+  font-size: 0.92rem;
+}
+
+@media (max-width: 768px) {
+  .suporte-card {
+    padding: 18px;
+  }
+  
+  .login-prompt {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .login-prompt .btn {
+    width: 100%;
+  }
+  
+  .contato-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+{% endblock %}

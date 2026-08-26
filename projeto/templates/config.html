@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Configurações — Vaga Conectada{% endblock %}
+{% block page_title %}Configurações{% endblock %}
+
+{% block content %}
+<div class="card reveal" style="max-width:760px">
+  <div class="card-h"><h2><i class="fas fa-sliders"></i> Preferências</h2></div>
+  <div class="cfg-body">
+
+    <div class="cfg-row">
+      <div class="ci"><i class="fas fa-circle-half-stroke"></i></div>
+      <div class="ct"><b>Aparência</b><span>Escolha o tema do sistema</span></div>
+      <div class="ctrl"><div class="seg" id="segTema">
+        <button data-t="dark"><i class="fas fa-moon"></i> Escuro</button>
+        <button data-t="light"><i class="fas fa-sun"></i> Claro</button>
+      </div></div>
+    </div>
+
+    <div class="cfg-row">
+      <div class="ci"><i class="fas fa-compress"></i></div>
+      <div class="ct"><b>Densidade</b><span>Compacta mostra mais informação na tela</span></div>
+      <div class="ctrl"><label class="switch"><input type="checkbox" id="swDens"><span class="track"></span></label></div>
+    </div>
+
+    <div class="cfg-row">
+      <div class="ci"><i class="fas fa-comments"></i></div>
+      <div class="ct"><b>Mural da comunidade</b><span>Mostra o botão de chat no mapa</span></div>
+      <div class="ctrl"><label class="switch"><input type="checkbox" id="swMural" checked><span class="track"></span></label></div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function(){
+  const root = document.documentElement;
+  const cur  = () => root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+
+  // tema (sincroniza com o botão do topo)
+  const seg = document.getElementById('segTema');
+  const paintSeg = () => seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.t === cur()));
+  paintSeg();
+  seg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    root.setAttribute('data-theme', b.dataset.t);
+    try{ localStorage.setItem('vc-theme', b.dataset.t); }catch(e){}
+    paintSeg();
+    document.dispatchEvent(new CustomEvent('themechange', {detail:b.dataset.t}));
+    const tb = document.getElementById('themeBtn');
+    if (tb) tb.innerHTML = '<i class="fas ' + (b.dataset.t==='light'?'fa-moon':'fa-sun') + '"></i>';
+  }));
+
+  // densidade
+  const swD = document.getElementById('swDens');
+  swD.checked = localStorage.getItem('vc-density') === 'compact';
+  swD.addEventListener('change', () => {
+    document.body.classList.toggle('density-compact', swD.checked);
+    try{ localStorage.setItem('vc-density', swD.checked ? 'compact' : 'comfort'); }catch(e){}
+  });
+
+  // mural
+  const swM = document.getElementById('swMural');
+  const m = localStorage.getItem('vc-mural');
+  swM.checked = m === null ? true : m === '1';
+  swM.addEventListener('change', () => {
+    try{ localStorage.setItem('vc-mural', swM.checked ? '1' : '0'); }catch(e){}
+    const fab = document.querySelector('.mural-fab');
+    if (fab) fab.style.display = swM.checked ? '' : 'none';
+    vcToast(swM.checked ? 'Mural ativado no mapa' : 'Mural oculto no mapa', 'info');
+  });
+})();
+</script>
+{% endblock %}
