@@ -12,7 +12,7 @@ Projeto desenvolvido colaborativamente pela equipe:
 * 💻 **[Allan](https://github.com/allandev-code)** (`@allandev-code`)
 * 💻 **[Giulia](https://github.com/giulagg)** (`@giulagg`)
 * 💻 **[Anderson](https://github.com/Anderson-361)** (`@Anderson-361`)
-* 💻 **William** *(Aguardando inclusão do perfil GitHub)*
+* 💻 **[William](https://github.com/wllslz)** (`@wllslz`)
 * 💻 **José** *(Aguardando inclusão do perfil GitHub)*
 
 ---
