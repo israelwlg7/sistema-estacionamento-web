@@ -13,7 +13,7 @@ Projeto desenvolvido colaborativamente pela equipe:
 * 💻 **[Giulia](https://github.com/giulagg)** (`@giulagg`)
 * 💻 **[Anderson](https://github.com/Anderson-361)** (`@Anderson-361`)
 * 💻 **[William](https://github.com/wllslz)** (`@wllslz`)
-* 💻 **José** *(Aguardando inclusão do perfil GitHub)*
+* 💻 **[José](https://github.com/Hosek-debug)** (`@Hosek-debug`)
 
 ---
 
