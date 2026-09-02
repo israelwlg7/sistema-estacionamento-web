@@ -61,7 +61,7 @@ WSGI_APPLICATION = 'estacionamentos.wsgi.application'
 
 # Database configuration with dj-database-url support
 # Supports PostgreSQL, MySQL, SQLite, etc.
-DEFAULT_DB_URL = "postgresql://postgres:C.QAc6%21Kmam5z%3F_@db.uyutmnggsdtxsrjiqowd.supabase.co:5432/postgres?sslmode=require"
+DEFAULT_DB_URL = "postgresql://postgres.uyutmnggsdtxsrjiqowd:C.QAc6%21Kmam5z%3F_@aws-0-us-east-2.pooler.supabase.com:6543/postgres"
 DATABASE_URL = config('DATABASE_URL', default=DEFAULT_DB_URL)
 
 import dj_database_url
