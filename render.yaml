@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: sistema-estacionamento-web
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn estacionamentos.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://postgres:C.QAc6%21Kmam5z%3F_@db.uyutmnggsdtxsrjiqowd.supabase.co:5432/postgres
+      - key: DEBUG
+        value: 'False'
+      - key: ALLOWED_HOSTS
+        value: '*'

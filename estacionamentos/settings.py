@@ -14,8 +14,8 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '10.10.10.170']
-CSRF_TRUSTED_ORIGINS = ['http://10.10.10.170:8000']
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='http://127.0.0.1:8000,http://localhost:8000,http://10.10.10.170:8000,https://*.loca.lt,https://*.ngrok-free.app,https://*.onrender.com', cast=lambda v: [s.strip() for s in v.split(',') if s.strip()])
 
 # Application definition
 INSTALLED_APPS = [
@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,12 +59,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'estacionamentos.wsgi.application'
 
-# Database
+# Database configuration with dj-database-url support
+# Supports PostgreSQL, MySQL, SQLite, etc.
+DEFAULT_DB_URL = "postgresql://postgres:C.QAc6%21Kmam5z%3F_@db.uyutmnggsdtxsrjiqowd.supabase.co:5432/postgres?sslmode=require"
+DATABASE_URL = config('DATABASE_URL', default=DEFAULT_DB_URL)
+
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
@@ -82,8 +89,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-# Adicione STATICFILES_DIRS se seus arquivos estáticos globais estiverem fora dos apps
-# STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'

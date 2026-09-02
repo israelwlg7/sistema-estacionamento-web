@@ -1,0 +1,335 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1500000$pUsqLQfgar6Fj8lpOpnUpV$cGzPawWoqKLSrXcMSTHg9CqeXBc55wMoEvie/76eOSk=",
+    "last_login": "2026-08-07T15:30:33.697Z",
+    "is_superuser": false,
+    "username": "exemplo",
+    "first_name": "israel shalon",
+    "last_name": "",
+    "email": "exemplo@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-08-07T15:30:33.041Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "8b4tg6t01vvths2l2yknk1fpf277u5zk",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP-yZ0MosBR79N43kIUFqRpISnsy_t006UGvM5N5g6d9K37vafULwwQDXH5ZoPhM9RD8oHpvIra6rUsQRyJO28XcOL1uZ_s3KNQLTCA1DUpicOY6moSImCk7m3IyxCidk2Q5jtoqE0lHRDbakdLKyMxKRvh8AczYN2M:1wsMWn:xUBoKLF_ptwJAQskpSzSF3cJGfQg9yijpEYcT-3kOS0",
+    "expire_date": "2026-08-21T15:30:33.703Z"
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 1,
+  "fields": {
+    "numero": 1,
+    "setor": "A",
+    "status": "OCUPADA",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 2,
+  "fields": {
+    "numero": 2,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 3,
+  "fields": {
+    "numero": 3,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 4,
+  "fields": {
+    "numero": 4,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 5,
+  "fields": {
+    "numero": 5,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 6,
+  "fields": {
+    "numero": 6,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 7,
+  "fields": {
+    "numero": 7,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 8,
+  "fields": {
+    "numero": 8,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 9,
+  "fields": {
+    "numero": 9,
+    "setor": "A",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 10,
+  "fields": {
+    "numero": 10,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 11,
+  "fields": {
+    "numero": 11,
+    "setor": "B",
+    "status": "OCUPADA",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 12,
+  "fields": {
+    "numero": 12,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 13,
+  "fields": {
+    "numero": 13,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 14,
+  "fields": {
+    "numero": 14,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 15,
+  "fields": {
+    "numero": 15,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 16,
+  "fields": {
+    "numero": 16,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 17,
+  "fields": {
+    "numero": 17,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.vaga",
+  "pk": 18,
+  "fields": {
+    "numero": 18,
+    "setor": "B",
+    "status": "LIVRE",
+    "posicao_x": 0,
+    "posicao_y": 0
+  }
+},
+{
+  "model": "projeto.veiculo",
+  "pk": 1,
+  "fields": {
+    "placa": "ABC1244",
+    "modelo": "Kwid",
+    "cor": "Branco",
+    "vaga": 1,
+    "usuario": [
+      "exemplo"
+    ],
+    "entrada": "2026-08-07T15:31:30.565Z",
+    "saida": null,
+    "ativo": true,
+    "pagamento": "PAGO",
+    "valor_final": "8.00",
+    "saida_solicitada": "2026-08-07T15:31:33.160Z"
+  }
+},
+{
+  "model": "projeto.veiculo",
+  "pk": 2,
+  "fields": {
+    "placa": "ABD4344",
+    "modelo": "Palio",
+    "cor": "Prata",
+    "vaga": 11,
+    "usuario": [
+      "exemplo"
+    ],
+    "entrada": "2026-08-07T15:32:22.717Z",
+    "saida": null,
+    "ativo": true,
+    "pagamento": "",
+    "valor_final": null,
+    "saida_solicitada": null
+  }
+},
+{
+  "model": "projeto.movimento",
+  "pk": 1,
+  "fields": {
+    "veiculo": 1,
+    "tipo": "ENTRADA",
+    "horario": "2026-08-07T15:31:30.577Z",
+    "observacao": "Entrada na vaga 1"
+  }
+},
+{
+  "model": "projeto.movimento",
+  "pk": 2,
+  "fields": {
+    "veiculo": 2,
+    "tipo": "ENTRADA",
+    "horario": "2026-08-07T15:32:22.728Z",
+    "observacao": "Entrada na vaga 11"
+  }
+},
+{
+  "model": "projeto.avisovaga",
+  "pk": 1,
+  "fields": {
+    "vaga": 6,
+    "usuario": [
+      "exemplo"
+    ],
+    "status": "OCUPADA",
+    "criado_em": "2026-08-07T15:31:40.040Z"
+  }
+},
+{
+  "model": "projeto.avisovaga",
+  "pk": 2,
+  "fields": {
+    "vaga": 14,
+    "usuario": [
+      "exemplo"
+    ],
+    "status": "LIVRE",
+    "criado_em": "2026-08-07T15:31:42.427Z"
+  }
+},
+{
+  "model": "projeto.chatmsg",
+  "pk": 1,
+  "fields": {
+    "usuario": [
+      "exemplo"
+    ],
+    "texto": "ola",
+    "criado_em": "2026-08-07T15:30:55.195Z"
+  }
+},
+{
+  "model": "projeto.ocorrencia",
+  "pk": 1,
+  "fields": {
+    "usuario": [
+      "exemplo"
+    ],
+    "tipo": "ROUBO",
+    "titulo": "Furto",
+    "descricao": "Meu carro foi furtado",
+    "placa_veiculo": null,
+    "vaga": null,
+    "status": "PENDENTE",
+    "criado_em": "2026-08-07T15:32:43.564Z",
+    "atualizado_em": "2026-08-07T15:32:43.564Z"
+  }
+}
+]
