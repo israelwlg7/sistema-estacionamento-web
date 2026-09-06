@@ -85,3 +85,4 @@ Acesse o sistema em seu navegador em `http://127.0.0.1:8000/`.
 ## 📄 Licença
 
 Este projeto é de uso acadêmico e profissional, desenvolvido pelo grupo de desenvolvimento.
+
