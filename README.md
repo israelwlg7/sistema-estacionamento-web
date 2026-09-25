@@ -10,7 +10,7 @@ Projeto desenvolvido colaborativamente pela equipe:
 
 * 💻 **[Israel Shalon](https://github.com/israelwlg7)** (`@israelwlg7`)
 * 💻 **[Allan](https://github.com/allandev-code)** (`@allandev-code`)
-* 💻 **[Giulia](https://github.com/giulagg)** (`@giulagg`)
+* 💻 **[Giulia](https://github.com/giulagg)** (`@giulagg`) 
 * 💻 **[Anderson](https://github.com/Anderson-361)** (`@Anderson-361`)
 * 💻 **[William](https://github.com/wllslz)** (`@wllslz`)
 * 💻 **[José](https://github.com/Hosek-debug)** (`@Hosek-debug`)
@@ -85,4 +85,5 @@ Acesse o sistema em seu navegador em `http://127.0.0.1:8000/`.
 ## 📄 Licença
 
 Este projeto é de uso acadêmico e profissional, desenvolvido pelo grupo de desenvolvimento.
+ 
 
